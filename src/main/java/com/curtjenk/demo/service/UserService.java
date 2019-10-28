@@ -3,15 +3,15 @@ package com.curtjenk.demo.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.curtjenk.demo.db.PostgresUtil;
 import com.curtjenk.demo.dto.UserDto;
 import com.curtjenk.demo.dto.UserMapper;
 import com.curtjenk.demo.repository.UserRepository;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserService implements IUserService {
-    private static Logger logger = LoggerFactory.getLogger(PostgresUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
 
