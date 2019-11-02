@@ -41,7 +41,7 @@ public class PostgresUtil {
 	 * @return
 	 */
 	public <T> List<T> select(String sql, Class<T> clz, Object... objects) {
-		logger.info("select(), entered. type: {}, sql: {}", clz.getSimpleName(), sql);
+		logger.debug("select(), entered. type: {}, sql: {}", clz.getSimpleName(), sql);
 		Constructor<T> constructor;
 		try {
 			constructor = clz.getConstructor(ResultSet.class);
@@ -65,7 +65,7 @@ public class PostgresUtil {
 									+ clz.getSimpleName());
 				}
 			}).list();
-			logger.info("select(), exiting. type: {}, list-size: {}", clz.getSimpleName(), list.size());
+			logger.debug("select(), exiting. type: {}, list-size: {}", clz.getSimpleName(), list.size());
 			return list;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -80,7 +80,7 @@ public class PostgresUtil {
 	 * @return
 	 */
 	public List<String> selectSQL(String sql, Object... objects) {
-		logger.info("select(), entered. sql: {}", sql);
+		logger.debug("select(), entered. sql: {}", sql);
 
 		try (Handle handle = Jdbi.open(pooledDataSource.getConnection()); Query q = handle.createQuery(sql);) {
 			for (int i = 0; i < objects.length; i++) {
@@ -90,7 +90,7 @@ public class PostgresUtil {
 				return rs.getString(1);
 			}).list();
 			handle.close();
-			logger.info("select(), exiting. list-size: {}", list.size());
+			logger.debug("select(), exiting. list-size: {}", list.size());
 			return list;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -119,7 +119,7 @@ public class PostgresUtil {
 
 			final MutableInt total = new MutableInt(0);
 			itemOne = list.get(0);
-			logger.info("local?: {} upsert(list), entered. type: {}, list-size: {}", localConnection,
+			logger.debug("local?: {} upsert(list), entered. type: {}, list-size: {}", localConnection,
 					itemOne.getClass().getSimpleName(), list.size());
 
 			// create a local connection that commits if no connection is passed in
@@ -167,7 +167,7 @@ public class PostgresUtil {
 				}
 			}
 
-			logger.info("upsert(list), exiting. type: {}, upsert-count: {}", itemOne.getClass().getSimpleName(),
+			logger.debug("upsert(list), exiting. type: {}, upsert-count: {}", itemOne.getClass().getSimpleName(),
 					total.intValue());
 			return total.intValue();
 		} catch (Exception catchAll) {
@@ -188,7 +188,7 @@ public class PostgresUtil {
 	 * @param iBindPreparedStatement
 	 */
 	public void upsert(IBindPreparedStatement iBindPreparedStatement, String schemaName) {
-		logger.info("upsert(single), entered. type: {}", iBindPreparedStatement.getClass().getSimpleName());
+		logger.debug("upsert(single), entered. type: {}", iBindPreparedStatement.getClass().getSimpleName());
 
 		try (Connection conn = pooledDataSource.getConnection();
 				PreparedStatement ps = conn.prepareStatement(iBindPreparedStatement.getUpsertSql(schemaName))) {
@@ -203,7 +203,7 @@ public class PostgresUtil {
 	}
 
 	public void update(String sql, Object... objects) {
-		logger.info("update(), entered. sql: {}", sql);
+		logger.debug("update(), entered. sql: {}", sql);
 		try (Handle handle = Jdbi.open(pooledDataSource.getConnection());) {
 			try (Update u = handle.createUpdate(sql);) {
 				for (int i = 0; i < objects.length; i++) {

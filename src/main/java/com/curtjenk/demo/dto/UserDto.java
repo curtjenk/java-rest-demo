@@ -1,5 +1,9 @@
 package com.curtjenk.demo.dto;
 
+import java.util.List;
+
+import com.curtjenk.demo.model.UserOrganizationRoleModel;
+import com.curtjenk.demo.model.UserTeamRoleModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,6 +28,9 @@ public class UserDto {
     private String nickName;
     private String email;
     @JsonIgnore
+    @ToString.Exclude
     private String password;
+    private List<UserOrganizationRoleModel> organizationRoles;
+    private List<UserTeamRoleModel> teamRoles;
 
 }

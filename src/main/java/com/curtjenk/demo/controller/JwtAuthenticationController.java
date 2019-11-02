@@ -1,7 +1,5 @@
 package com.curtjenk.demo.controller;
 
-import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +31,8 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        System.out.println(authenticationRequest.getUsername());
-        System.out.println(authenticationRequest.getPassword());
+        logger.debug(authenticationRequest.getUsername());
+        logger.debug(authenticationRequest.getPassword());
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.curtjenk.demo.db.PostgresUtil;
 import com.curtjenk.demo.model.UserModel;
+import com.curtjenk.demo.model.UserOrganizationRoleModel;
+import com.curtjenk.demo.model.UserTeamRoleModel;
 
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +33,45 @@ public class UserRepository {
             return Optional.empty();
         }
 
+    }
+
+    public List<UserOrganizationRoleModel> findOrganizationRoles(String email) {
+        final String sql = "SELECT ou.*, o.name as organization_name, r.name as role_name "
+                + "   FROM users                                                 "
+                + "   JOIN organization_user ou on ou.user_id = users.id        "
+                + "   JOIN roles r on r.id = ou.role_id "
+                + "   JOIN organizations o on o.id = ou.organization_id "
+                + "  WHERE users.email = ? ";
+        return postgresUtil.select(sql, UserOrganizationRoleModel.class, email);
+    }
+
+    public List<UserOrganizationRoleModel> findOrganizationRoles(Long userId) {
+        final String sql = "SELECT ou.*, o.name as organization_name, r.name as role_name "
+                + "   FROM users "
+                + "   JOIN organization_user ou on ou.user_id = users.id        "
+                + "   JOIN roles r on r.id = ou.role_id        "
+                + "   JOIN organizations o on o.id = ou.organization_id "
+                + "  WHERE users.id = ?                                          ";
+        return postgresUtil.select(sql, UserOrganizationRoleModel.class, userId);
+    }
+    
+    public List<UserTeamRoleModel> findTeamRoles(Long userId) {
+        final String sql = "SELECT tu.*, t.name as team_name, r.name as role_name "
+                + "   FROM users                                                 "
+                + "   JOIN team_user tu on tu.user_id = users.id        "
+                + "   JOIN roles r on r.id = tu.role_id " 
+                + "   JOIN teams t on o.id = tu.team_id "
+                + "  WHERE users.id = ?                                          ";
+        return postgresUtil.select(sql, UserTeamRoleModel.class, userId);
+    }
+
+    public List<UserTeamRoleModel> findTeamRoles(String email) {
+         final String sql = "SELECT tu.*, t.name as team_name, r.name as role_name "
+                + "   FROM users                                                 "
+                + "   JOIN team_user tu on tu.user_id = users.id        "
+                + "   JOIN roles r on r.id = tu.role_id " 
+                + "   JOIN teams t on t.id = tu.team_id "
+                + "  WHERE users.email = ?   ";
+        return postgresUtil.select(sql, UserTeamRoleModel.class, email);
     }
 }

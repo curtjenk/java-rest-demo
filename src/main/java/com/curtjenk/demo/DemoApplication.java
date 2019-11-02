@@ -8,6 +8,18 @@ public class DemoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
+
+		// org.springframework.security.crypto.password.PasswordEncoder 
+		// encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+		// String passwd = encoder.encode("xxxxxx");
+
+		// // passwd - password from database
+		// System.out.println("----------------------------");
+		// System.out.println("----------------------------");
+		// System.out.println(passwd); // print hash
+		// System.out.println("----------------------------");
+		// System.out.println("----------------------------");
+
 	}
 
 }
