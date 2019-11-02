@@ -9,19 +9,21 @@ import lombok.Data;
 import lombok.SneakyThrows;
 
 @Data
-public class User implements IBindPreparedStatement {
+public class UserModel implements IBindPreparedStatement {
 
     private Long id; // Sequence
     private String name;
     private String nickName;
     private String email;
+    private String password;
 
     @SneakyThrows
-    public User(ResultSet rs) {
+    public UserModel(ResultSet rs) {
         this.id = rs.getLong("id");
         this.name = rs.getString("name");
         this.nickName = rs.getString("nickname");
         this.email = rs.getString("email");
+        this.password = rs.getString("password");
     }
 
     // Sequence should match the insert statement

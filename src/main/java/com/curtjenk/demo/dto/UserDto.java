@@ -1,5 +1,6 @@
 package com.curtjenk.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -22,5 +23,7 @@ public class UserDto {
     private String name;
     private String nickName;
     private String email;
+    @JsonIgnore
+    private String password;
 
 }

@@ -18,14 +18,14 @@ import org.jdbi.v3.core.statement.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * A generic PostGres utility class.
  *
  * @author
  */
-@Component()
+@Repository
 public class PostgresUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(PostgresUtil.class);
