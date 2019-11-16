@@ -11,6 +11,8 @@ public interface IUserService {
 
     UserDto findUserByEmail(String email);
 
+    UserDto findUserById(Long id);
+
     UserDto updateProfile(UserDto userDto);
 
     UserDto changePassword(UserDto userDto, String newPassword);

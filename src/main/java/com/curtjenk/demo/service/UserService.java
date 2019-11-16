@@ -37,15 +37,17 @@ public class UserService implements IUserService {
         return new UserDto();
     }
 
-    public UserDto getUserProfile(String email) {
+
+    @Override
+    public UserDto findUserById(Long id) {
         UserDto userDto = null;
         try {
             CompletableFuture<Optional<UserModel>> f1 = CompletableFuture
-                    .supplyAsync(() -> userRepository.findUserByEmail(email), executorService);
+                    .supplyAsync(() -> userRepository.findUserById(id), executorService);
             CompletableFuture<List<UserOrganizationRoleModel>> f2 = CompletableFuture
-                    .supplyAsync(() -> userRepository.findOrganizationRoles(email), executorService);
+                    .supplyAsync(() -> userRepository.findOrganizationRoles(id), executorService);
             CompletableFuture<List<UserTeamRoleModel>> f3 = CompletableFuture
-                    .supplyAsync(() -> userRepository.findTeamRoles(email), executorService);
+                    .supplyAsync(() -> userRepository.findTeamRoles(id), executorService);
 
             Optional<UserModel> user = f1.get();
             List<UserOrganizationRoleModel> organizationRoles = f2.get();
@@ -54,6 +56,7 @@ public class UserService implements IUserService {
             userDto = UserMapper.toUserDto(user.get());
             userDto.setOrganizationRoles(organizationRoles);
             userDto.setTeamRoles(teamRoles);
+            logger.info(userDto.toString());
         } catch (ExecutionException ee) {
             logger.error("msg", ee);
         } catch (InterruptedException ie) {
@@ -66,32 +69,8 @@ public class UserService implements IUserService {
     @Override
     public UserDto findUserByEmail(String email) {
         Optional<UserModel> user = userRepository.findUserByEmail(email);
-        logger.info(user.toString());
+        // logger.info(user.toString());
         return user.map(v -> UserMapper.toUserDto(v)).orElse(null);
-
-        // UserDto userDto = null;
-        // try {
-        //     CompletableFuture<Optional<UserModel>> f1 = CompletableFuture
-        //             .supplyAsync(() -> userRepository.findUserByEmail(email), executorService);
-        //     CompletableFuture<List<UserOrganizationRoleModel>> f2 = CompletableFuture
-        //             .supplyAsync(() -> userRepository.findOrganizationRoles(email), executorService);
-        //     CompletableFuture<List<UserTeamRoleModel>> f3 = CompletableFuture
-        //             .supplyAsync(() -> userRepository.findTeamRoles(email), executorService);
-            
-        //     Optional<UserModel> user = f1.get();
-        //     List<UserOrganizationRoleModel> organizationRoles = f2.get();
-        //     List<UserTeamRoleModel> teamRoles = f3.get();
-
-        //     userDto = UserMapper.toUserDto(user.get());
-        //     userDto.setOrganizationRoles(organizationRoles);
-        //     userDto.setTeamRoles(teamRoles);
-        //     logger.info(userDto.toString());
-        // } catch (ExecutionException ee) {
-        //     logger.error("msg", ee);
-        // } catch (InterruptedException ie) {
-        //     logger.error("msg", ie);
-        // }
-        // return userDto;
     }
 
     @Override

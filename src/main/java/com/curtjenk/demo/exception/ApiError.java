@@ -2,8 +2,6 @@ package com.curtjenk.demo.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.Builder;
 import lombok.Getter;
 

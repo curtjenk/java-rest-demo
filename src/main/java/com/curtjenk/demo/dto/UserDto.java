@@ -33,10 +33,10 @@ public class UserDto {
     private List<UserOrganizationRoleModel> organizationRoles;
     private List<UserTeamRoleModel> teamRoles;
 
-    public void setUsername(String username) {
-        this.name = username;
-    }
-    public String getUsername() {
-        return this.name;
-    }
+    // public void setUsername(String username) {
+    //     this.name = username;
+    // }
+    // public String getUsername() {
+    //     return this.name;
+    // }
 }
