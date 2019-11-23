@@ -40,24 +40,26 @@ public class PostgresUtil {
 	 * @param clz bean class
 	 * @return
 	 */
-	public <T> List<T> select(String sql, Class<T> clz, Object... objects) {
+	public <T> List<T> select(final String sql, final Class<T> clz, final Object... objects) {
 		logger.debug("select(), entered. type: {}, sql: {}", clz.getSimpleName(), sql);
 		Constructor<T> constructor;
 		try {
 			constructor = clz.getConstructor(ResultSet.class);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(
 					"Couldn't find a constructor that takes ResultSet as parameter for: " + clz.getSimpleName());
 		}
 
 		try (Handle handle = Jdbi.open(pooledDataSource.getConnection()); Query q = handle.createQuery(sql);) {
+			// Apply bind parameters
 			for (int i = 0; i < objects.length; i++) {
 				q.bind(i, objects[i]);
 			}
-			List<T> list = q.map((rs, ctx) -> {
+
+			final List<T> list = q.map((rs, ctx) -> {
 				try {
 					return constructor.newInstance(rs);
-				} catch (Exception e) {
+				} catch (final Exception e) {
 					e.printStackTrace();
 					handle.close();
 					throw new RuntimeException(
@@ -65,9 +67,10 @@ public class PostgresUtil {
 									+ clz.getSimpleName());
 				}
 			}).list();
+
 			logger.debug("select(), exiting. type: {}, list-size: {}", clz.getSimpleName(), list.size());
 			return list;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 
@@ -79,25 +82,26 @@ public class PostgresUtil {
 	 * @param sql
 	 * @return
 	 */
-	public List<String> selectSQL(String sql, Object... objects) {
+	public List<String> selectSQL(final String sql, final Object... objects) {
 		logger.debug("select(), entered. sql: {}", sql);
 
 		try (Handle handle = Jdbi.open(pooledDataSource.getConnection()); Query q = handle.createQuery(sql);) {
 			for (int i = 0; i < objects.length; i++) {
 				q.bind(i, objects[i]);
 			}
-			List<String> list = q.map((rs, ctx) -> {
+			final List<String> list = q.map((rs, ctx) -> {
 				return rs.getString(1);
 			}).list();
 			handle.close();
 			logger.debug("select(), exiting. list-size: {}", list.size());
 			return list;
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public int upsert(List<? extends IBindPreparedStatement> list, String schemaName) throws DatabaseException {
+	public int upsert(final List<? extends IBindPreparedStatement> list, final String schemaName)
+			throws DatabaseException {
 		return upsert(list, schemaName, (Connection) null);
 	}
 
@@ -108,10 +112,10 @@ public class PostgresUtil {
 	 * @return
 	 * @throws DatabaseException
 	 */
-	public int upsert(List<? extends IBindPreparedStatement> list, String schemaName, Connection conn)
+	public int upsert(final List<? extends IBindPreparedStatement> list, final String schemaName, final Connection conn)
 			throws DatabaseException {
 		IBindPreparedStatement itemOne = null;
-		boolean localConnection = conn == null;
+		final boolean localConnection = conn == null;
 		try {
 			if (list == null || list.isEmpty()) {
 				return 0;
@@ -144,8 +148,8 @@ public class PostgresUtil {
 							if (localConnection) {
 								myConn.commit();
 							}
-						} catch (Exception e) {
-							String error = "upsert(list): Failed to exeuteBatch(), count: " + total.intValue();
+						} catch (final Exception e) {
+							final String error = "upsert(list): Failed to exeuteBatch(), count: " + total.intValue();
 							logger.error(error, e);
 							throw new RuntimeException(error, e);
 						}
@@ -160,7 +164,7 @@ public class PostgresUtil {
 				if (localConnection && myConn != null) {
 					try {
 						myConn.close();
-					} catch (SQLException e) {
+					} catch (final SQLException e) {
 						logger.error(e.getMessage(), e);
 						// nothing to do...we tried to close it
 					}
@@ -170,7 +174,7 @@ public class PostgresUtil {
 			logger.debug("upsert(list), exiting. type: {}, upsert-count: {}", itemOne.getClass().getSimpleName(),
 					total.intValue());
 			return total.intValue();
-		} catch (Exception catchAll) {
+		} catch (final Exception catchAll) {
 			if (itemOne != null) {
 				logger.error("upsert(list), catchAll exception: {}, type: {}", catchAll.getMessage(),
 						itemOne.getClass().getSimpleName(), catchAll);
@@ -187,14 +191,14 @@ public class PostgresUtil {
 	 * 
 	 * @param iBindPreparedStatement
 	 */
-	public void upsert(IBindPreparedStatement iBindPreparedStatement, String schemaName) {
+	public void upsert(final IBindPreparedStatement iBindPreparedStatement, final String schemaName) {
 		logger.debug("upsert(single), entered. type: {}", iBindPreparedStatement.getClass().getSimpleName());
 
 		try (Connection conn = pooledDataSource.getConnection();
 				PreparedStatement ps = conn.prepareStatement(iBindPreparedStatement.getUpsertSql(schemaName))) {
 			iBindPreparedStatement.bindPreparedStatement(ps, false);
 			ps.executeUpdate();
-		} catch (Exception catchAll) {
+		} catch (final Exception catchAll) {
 			logger.error("upsert(single), catchAll exception: {}, type: {}", catchAll.getMessage(),
 					iBindPreparedStatement.getClass().getSimpleName(), catchAll);
 			logger.error(ReflectionToStringBuilder.toString(iBindPreparedStatement));
@@ -202,7 +206,7 @@ public class PostgresUtil {
 		}
 	}
 
-	public void update(String sql, Object... objects) {
+	public void update(final String sql, final Object... objects) {
 		logger.debug("update(), entered. sql: {}", sql);
 		try (Handle handle = Jdbi.open(pooledDataSource.getConnection());) {
 			try (Update u = handle.createUpdate(sql);) {
