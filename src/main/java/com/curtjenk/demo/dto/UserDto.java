@@ -2,6 +2,7 @@ package com.curtjenk.demo.dto;
 
 import java.util.List;
 
+import com.curtjenk.demo.model.UserModel;
 import com.curtjenk.demo.model.UserOrganizationRoleModel;
 import com.curtjenk.demo.model.UserTeamRoleModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,10 +34,12 @@ public class UserDto {
     private List<UserOrganizationRoleModel> organizationRoles;
     private List<UserTeamRoleModel> teamRoles;
 
-    // public void setUsername(String username) {
-    //     this.name = username;
-    // }
-    // public String getUsername() {
-    //     return this.name;
-    // }
+    public static UserDto map(UserModel user) {
+        return new UserDto()
+                .setId(user.getId())
+                .setName(user.getName())
+                .setNickName(user.getNickName())
+                .setEmail(user.getEmail())
+                .setPassword(user.getPassword());
+    }
 }

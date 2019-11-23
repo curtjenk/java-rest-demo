@@ -35,7 +35,9 @@ public class UserOrganizationRoleModel implements IBindPreparedStatement {
         ps.setLong(3, this.roleId);
     }
 
-    private static final String insert = "INSERT INTO organization_user " + " (organization_id, user_id, role_id)" + " VALUES (?, ?, ?)";
+    private static final String insert = "INSERT INTO organization_user " 
+            + " (organization_id, user_id, role_id)" 
+            + " VALUES (?, ?, ?)";
 
     @Override
     public String getUpsertSql(String var1) {

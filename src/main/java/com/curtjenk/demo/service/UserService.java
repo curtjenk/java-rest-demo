@@ -51,7 +51,8 @@ public class UserService {
             List<UserOrganizationRoleModel> organizationRoles = f2.get();
             List<UserTeamRoleModel> teamRoles = f3.get();
 
-            userDto = UserMapper.toUserDto(user.get());
+            userDto = UserDto.map(user.get());
+            // userDto = UserMapper.toUserDto(user.get());
             userDto.setOrganizationRoles(organizationRoles);
             userDto.setTeamRoles(teamRoles);
             logger.info(userDto.toString());

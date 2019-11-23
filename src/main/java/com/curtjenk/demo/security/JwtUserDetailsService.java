@@ -2,12 +2,9 @@ package com.curtjenk.demo.security;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Supplier;
 
-import com.curtjenk.demo.dto.UserDto;
 import com.curtjenk.demo.model.UserModel;
 import com.curtjenk.demo.repository.UserRepository;
-import com.curtjenk.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -38,8 +35,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     //     final UserDto newUser = new UserDto();
     //     // newUser.setName(user.getUsername());
     //     newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-    //     return newUser;
-    //     //TODO
     //     // return userService.save(newUser);
     // }
 }

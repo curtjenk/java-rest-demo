@@ -33,3 +33,4 @@ build/
 
 ### ---- ###
 application-default.properties
+logs/
