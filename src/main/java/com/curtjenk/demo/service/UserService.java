@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService implements IUserService {
+public class UserService {
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
@@ -31,15 +31,13 @@ public class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
-    @Override
     public UserDto signup(UserDto userDto) {
 
         return new UserDto();
     }
 
 
-    @Override
-    public UserDto findUserById(Long id) {
+    public UserDto getProfileById(Long id) {
         UserDto userDto = null;
         try {
             CompletableFuture<Optional<UserModel>> f1 = CompletableFuture
@@ -66,24 +64,20 @@ public class UserService implements IUserService {
         return userDto;
     }
     
-    @Override
-    public UserDto findUserByEmail(String email) {
+    public UserDto getUserByEmail(String email) {
         Optional<UserModel> user = userRepository.findUserByEmail(email);
         // logger.info(user.toString());
         return user.map(v -> UserMapper.toUserDto(v)).orElse(null);
     }
 
-    @Override
     public UserDto updateProfile(UserDto userDto) {
         return new UserDto();
     }
 
-    @Override
     public UserDto changePassword(UserDto userDto, String newPassword) {
         return new UserDto();
     }
 
-    @Override
     public List<UserDto> getAllUsers() {
         logger.debug("getAllUsers()");
         return userRepository.findAll().stream().map(UserMapper::toUserDto).collect(Collectors.toList());

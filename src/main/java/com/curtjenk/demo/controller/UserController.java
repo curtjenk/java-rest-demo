@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = "application/json")
     public UserDto index(@PathVariable Long id) {
         logger.info("User id is {}", id);
-        return userService.findUserById(id);
+        return userService.getProfileById(id);
     }
 
 }

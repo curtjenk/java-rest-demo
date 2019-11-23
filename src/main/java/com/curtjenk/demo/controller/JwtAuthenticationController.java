@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 // import com.curtjenk.demo.security.JwtUserDetailsService;
 import com.curtjenk.demo.security.JwtTokenUtil;
+import com.curtjenk.demo.util.WebUtils;
 import com.curtjenk.demo.security.JwtRequest;
 import com.curtjenk.demo.security.JwtResponse;
 
 @RestController
 public class JwtAuthenticationController {
     private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationController.class);
+
+    @Autowired
+    private WebUtils webUtils;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -31,8 +35,8 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        logger.debug(authenticationRequest.getUsername());
-        logger.debug(authenticationRequest.getPassword());
+        logger.info(webUtils.getClientIp());
+        
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         // final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         // final String token = jwtTokenUtil.generateToken(userDetails);

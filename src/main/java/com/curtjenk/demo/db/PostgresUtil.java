@@ -106,7 +106,7 @@ public class PostgresUtil {
 	 * 
 	 * @param list
 	 * @return
-	 * @throws TaxDatabaseException
+	 * @throws DatabaseException
 	 */
 	public int upsert(List<? extends IBindPreparedStatement> list, String schemaName, Connection conn)
 			throws DatabaseException {
