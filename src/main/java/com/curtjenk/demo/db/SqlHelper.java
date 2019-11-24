@@ -1,5 +1,6 @@
 package com.curtjenk.demo.db;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -83,12 +84,16 @@ public class SqlHelper {
 	 * @return
 	 */
 	public static String generateInserts(String table, List<Holder> holders) {
+		if (holders.isEmpty()) {
+			return "";
+		}
+		
 		String str = "INSERT INTO %%s(%s) VALUES(%s) ";
 		holders.sort((c1, c2) -> c1.getPlace() - c2.getPlace());
 		String statement = "";
 		String quesMarks = "";
 		for (Holder ins : holders) {
-			statement += ins.getColumn().value() + ",";
+			statement += ins.getColumn().name() + ",";
 			quesMarks += "?,";
 
 		}
@@ -115,9 +120,9 @@ public class SqlHelper {
 		String update = "";
 		for (Holder ins : holders) {
 			if (ins.getColumn().isOnconflict())
-				con += ins.getColumn().value() + ",";
+				con += ins.getColumn().name() + ",";
 			else {
-				String name = ins.getColumn().value();
+				String name = ins.getColumn().name();
 				update += name + " = excluded." + name + ",";
 			}
 
@@ -147,11 +152,11 @@ public class SqlHelper {
 		for (Holder hold : holders) {
 			try {
 				if(hold.getColumn().rsInstantiation()==ResultSetInstantiation.class) {
-					Object value = hold.getRsMethod().invoke(resultSet, hold.getColumn().value());
+					Object value = hold.getRsMethod().invoke(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				}else {
 					ResultSetInstantiation rsI=hold.getColumn().rsInstantiation().newInstance();
-					Object value=rsI.apply(resultSet, hold.getColumn().value());
+					Object value=rsI.apply(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				}
 				
@@ -187,6 +192,15 @@ public class SqlHelper {
 		return holderList;
 	}
 
+	public static <T> String getTableName(Class<T> clazz) throws ClassNotFoundException {
+		if (clazz.isAnnotationPresent(DbTable.class)) {
+			Annotation annotation = clazz.getAnnotation(DbTable.class);
+			DbTable dbTable = (DbTable) annotation;
+			return dbTable.name();
+		}
+		return null;
+	}
+	
 	/**
 	 * This will assign a ResultMap to a holder based upon the
 	 * {@link Holder#getField()} type .

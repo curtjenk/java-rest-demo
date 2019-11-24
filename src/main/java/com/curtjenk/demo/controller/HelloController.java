@@ -3,6 +3,7 @@ package com.curtjenk.demo.controller;
 import java.util.List;
 
 import com.curtjenk.demo.dto.UserDto;
+import com.curtjenk.demo.model.OrganizationModel;
 import com.curtjenk.demo.service.UserService;
 
 // import org.slf4j.Logger;
@@ -23,7 +24,9 @@ public class HelloController {
 
     @RequestMapping("/")
     public List<UserDto> index() {
-
+        OrganizationModel org = new OrganizationModel();
+        org.getAddress1();
+        
         return userService.getAllUsers();
 
     }

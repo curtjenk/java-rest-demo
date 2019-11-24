@@ -22,9 +22,8 @@ public @interface DbColumn {
 	/**
 	 * This represents the column in the database schema.
 	 * 
-	 * 
 	 */
-	String value();
+	String name();
 
 	/**
 	 * This represents if this column should be included in the on conflict clause
@@ -40,6 +39,7 @@ public @interface DbColumn {
 	 * 
 	 */
 	Class<? extends PreparedInstantiation> psInstantiation() default PreparedInstantiation.class;
+	Class<? extends ColBindType> bindType() default ColBindType.class;
 
 	/**
 	 * This is for when you need custom instantiation during the ResultSet
