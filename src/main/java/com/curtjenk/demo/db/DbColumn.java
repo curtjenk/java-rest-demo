@@ -3,6 +3,7 @@ package com.curtjenk.demo.db;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -17,6 +18,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target(FIELD)
+@Inherited
 public @interface DbColumn {
 
 	/**
@@ -38,7 +40,7 @@ public @interface DbColumn {
 	 * value for this column instead of what the existing value of the field.
 	 * 
 	 */
-	Class<? extends PreparedInstantiation> psInstantiation() default PreparedInstantiation.class;
+	// Class<? extends PreparedInstantiation> psInstantiation() default PreparedInstantiation.class;
 	Class<? extends ColBindType> bindType() default ColBindType.class;
 
 	/**

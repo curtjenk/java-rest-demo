@@ -2,6 +2,7 @@ package com.curtjenk.demo.model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.curtjenk.demo.db.IBindPreparedStatement;
 
@@ -29,16 +30,32 @@ public class UserModel implements IBindPreparedStatement {
     // Sequence should match the insert statement
     @SneakyThrows
     @Override
+    public void bindPreparedStatement(PreparedStatement ps) {
+        this.bindPreparedStatement(ps, true);
+    }
+
+    @Override
     public void bindPreparedStatement(PreparedStatement ps, boolean isBatch) {
-        ps.setString(1, this.name);
-        ps.setString(2, this.nickName);
-        ps.setString(3, this.email);
+        try {
+            ps.setString(1, this.name);
+            ps.setString(2, this.nickName);
+            ps.setString(3, this.email);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static final String insert = "INSERT INTO users " + " (name, nickname, email)" + " VALUES (?, ?, ?)";
 
     @Override
-    public String getUpsertSql(String var1) {
+    public String getUpsertSQL() {
         return insert;
     }
+
+    @Override
+    public String getUpsertSQL(String schemaName) {
+        return insert;
+    }
+   
+
 }

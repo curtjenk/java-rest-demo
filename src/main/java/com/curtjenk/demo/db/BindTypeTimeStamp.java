@@ -3,9 +3,7 @@ package com.curtjenk.demo.db;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TimeStampInst implements PreparedInstantiation {
-	
-	// TODO not using this class
+public class BindTypeTimeStamp implements ColBindType {
 
 	@Override
 	public void apply(PreparedStatement ps, int place, Object currentValue) {

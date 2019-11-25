@@ -59,10 +59,18 @@ public class SqlHelper {
 				Holder ins = holders.get(i);
 
 				int place = ins.getPlace() + 1;
-				if (ins.getColumn().psInstantiation() != PreparedInstantiation.class) {
-					Class<? extends PreparedInstantiation> clazz = ins.getColumn().psInstantiation();
-					PreparedInstantiation inst = clazz.newInstance();
-					inst.apply(ps, place,ins.getField().get(obj));
+				// if (ins.getColumn().psInstantiation() != PreparedInstantiation.class) {
+				// 	Class<? extends PreparedInstantiation> clazz = ins.getColumn().psInstantiation();
+				// 	PreparedInstantiation inst = clazz.newInstance();
+				// 	inst.apply(ps, place,ins.getField().get(obj));
+				// } else {
+				// 	ps.setObject(place, ins.getField().get(obj));
+				// }
+
+				if (ins.getColumn().bindType() != ColBindType.class) {
+					Class<? extends ColBindType> clazz = ins.getColumn().bindType();
+					ColBindType inst = clazz.newInstance();
+					inst.apply(ps, place, ins.getField().get(obj));
 				} else {
 					ps.setObject(place, ins.getField().get(obj));
 				}
@@ -187,6 +195,16 @@ public class SqlHelper {
 				holderList.add(new Holder(field, column));
 			}
 		}
+
+		final Class<? super T> superClass = clazz.getSuperclass();
+		for (Field field : superClass.getDeclaredFields()) {
+			if (field.isAnnotationPresent(DbColumn.class)) {
+				DbColumn column = field.getAnnotation(DbColumn.class);
+				field.setAccessible(true);
+				holderList.add(new Holder(field, column));
+			}
+		}
+		
 		generateRS(holderList);
 		setPlace(holderList);
 		return holderList;

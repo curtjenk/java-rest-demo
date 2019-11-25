@@ -2,6 +2,7 @@ package com.curtjenk.demo.controller;
 
 import java.util.List;
 
+import com.curtjenk.demo.db.PostgresUtil;
 import com.curtjenk.demo.dto.UserDto;
 import com.curtjenk.demo.model.OrganizationModel;
 import com.curtjenk.demo.service.UserService;
@@ -17,16 +18,22 @@ public class HelloController {
     // LoggerFactory.getLogger(HelloController.class);
 
     private UserService userService;
+    private PostgresUtil postgresUtil;
 
-    public HelloController(UserService userService) {
+    public HelloController(UserService userService, PostgresUtil postgresUtil) {
         this.userService = userService;
+        this.postgresUtil = postgresUtil;
     }
 
     @RequestMapping("/")
     public List<UserDto> index() {
         OrganizationModel org = new OrganizationModel();
-        org.getAddress1();
-        
+        org.setAddress1("123 Mocking Bird Ln");
+        org.setName("Demo Rest Api 3");
+        org.setParentId(33L);
+        System.out.println(org.getUpsertSQL());
+        postgresUtil.upsert(org);
+
         return userService.getAllUsers();
 
     }

@@ -34,11 +34,22 @@ public class UserTeamRoleModel implements IBindPreparedStatement {
         ps.setLong(2, this.userId);
         ps.setLong(3, this.roleId);
     }
+    
+    @Override
+    public void bindPreparedStatement(PreparedStatement preparedStatement) {
+    }
 
     private static final String insert = "INSERT INTO team_user " + " (team_id, user_id, role_id)" + " VALUES (?, ?, ?)";
 
     @Override
-    public String getUpsertSql(String var1) {
+    public String getUpsertSQL() {
         return insert;
     }
+
+    @Override
+    public String getUpsertSQL(String schemaName) {
+        return insert;
+    }
+
+   
 }

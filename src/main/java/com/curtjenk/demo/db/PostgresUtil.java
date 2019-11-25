@@ -128,7 +128,7 @@ public class PostgresUtil {
 
 			// create a local connection that commits if no connection is passed in
 			final Connection myConn = localConnection ? pooledDataSource.getConnection() : conn;
-			try (PreparedStatement ps = myConn.prepareStatement(itemOne.getUpsertSql(schemaName))) {
+			try (PreparedStatement ps = myConn.prepareStatement(itemOne.getUpsertSQL(schemaName))) {
 
 				if (localConnection) {
 					myConn.setAutoCommit(false);
@@ -195,7 +195,7 @@ public class PostgresUtil {
 		logger.debug("upsert(single), entered. type: {}", iBindPreparedStatement.getClass().getSimpleName());
 
 		try (Connection conn = pooledDataSource.getConnection();
-				PreparedStatement ps = conn.prepareStatement(iBindPreparedStatement.getUpsertSql(schemaName))) {
+				PreparedStatement ps = conn.prepareStatement(iBindPreparedStatement.getUpsertSQL(schemaName))) {
 			iBindPreparedStatement.bindPreparedStatement(ps, false);
 			ps.executeUpdate();
 		} catch (final Exception catchAll) {
@@ -204,6 +204,10 @@ public class PostgresUtil {
 			logger.error(ReflectionToStringBuilder.toString(iBindPreparedStatement));
 			catchAll.printStackTrace();
 		}
+	}
+
+	public void upsert(final IBindPreparedStatement iBindPreparedStatement) {
+		this.upsert(iBindPreparedStatement, "");
 	}
 
 	public void update(final String sql, final Object... objects) {
