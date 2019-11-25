@@ -15,7 +15,7 @@ public class OrganizationModel extends BaseModel<OrganizationModel> {
     private Long id; // Sequence
     @DbColumn(name = "parent_id")
     private Long parentId;
-    @DbColumn(name = "name")
+    @DbColumn(name = "name", isOnconflict = true)
     private String name;
     @DbColumn(name = "address1")
     private String address1;

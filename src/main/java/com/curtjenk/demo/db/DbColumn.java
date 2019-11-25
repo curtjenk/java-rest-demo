@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 public @interface DbColumn {
 
 	/**
-	 * This represents the column in the database schema.
+	 * This represents the column name in the database table.
 	 * 
 	 */
 	String name();
@@ -32,6 +32,8 @@ public @interface DbColumn {
 	 * when generating the upsert statement
 	 */
 	boolean isOnconflict() default false;
+
+	boolean updateable() default true;
 
 	/**
 	 * This is for when you need custom instantiation during the @see

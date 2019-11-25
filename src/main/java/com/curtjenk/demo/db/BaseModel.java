@@ -32,7 +32,7 @@ public abstract class BaseModel<T extends BaseModel<T>> implements IBindPrepared
     @DbColumn(name = "updated_user_id")
     private Long updatedUserId;
 
-    @DbColumn(name = "created_at", bindType = BindTypeTimeStamp.class)
+    @DbColumn(name = "created_at", updateable = false, bindType = BindTypeTimeStamp.class)
     private LocalDateTime createdAt;
 
     @DbColumn(name = "updated_at", bindType = BindTypeTimeStamp.class)
@@ -61,7 +61,7 @@ public abstract class BaseModel<T extends BaseModel<T>> implements IBindPrepared
     @Override
     public void bindPreparedStatement(PreparedStatement ps, boolean isBatch) {
         try {
-            SqlHelper.generatePreparedStatement(holders, ps, self);
+            SqlHelper.generatePreparedStatement(holders, ps, this);
         } catch (Exception e) {
             e.printStackTrace();
         }

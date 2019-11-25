@@ -103,13 +103,15 @@ public class SqlHelper {
 		for (Holder ins : holders) {
 			statement += ins.getColumn().name() + ",";
 			quesMarks += "?,";
-
 		}
-		if (statement.charAt(statement.length() - 1) == ',')
-			statement = statement.substring(0, statement.length() - 1);
+		statement = trimTrailingComma(statement);
+		quesMarks = trimTrailingComma(quesMarks);
 
-		if (quesMarks.charAt(quesMarks.length() - 1) == ',')
-			quesMarks = quesMarks.substring(0, quesMarks.length() - 1);
+		// if (statement.charAt(statement.length() - 1) == ',')
+		// 	statement = statement.substring(0, statement.length() - 1);
+
+		// if (quesMarks.charAt(quesMarks.length() - 1) == ',')
+		// 	quesMarks = quesMarks.substring(0, quesMarks.length() - 1);
 
 		return String.format(str, statement, quesMarks) + generateOnConflict(holders);
 	}
@@ -124,50 +126,56 @@ public class SqlHelper {
 	 */
 	public static String generateOnConflict(List<Holder> holders) {
 		String str = "  ON CONFLICT(%s) DO UPDATE SET  %s";
-		String con = "";
-		String update = "";
+		String conflictColumns = "";
+		String updateColumns = "";
 		for (Holder ins : holders) {
-			if (ins.getColumn().isOnconflict())
-				con += ins.getColumn().name() + ",";
-			else {
-				String name = ins.getColumn().name();
-				update += name + " = excluded." + name + ",";
+			DbColumn column = ins.getColumn();
+			if (column.isOnconflict())
+				conflictColumns += column.name() + ",";
+			else if (column.updateable()) {
+				String name = column.name();
+				updateColumns += name + " = excluded." + name + ",";
 			}
 
 		}
-		if (con.isEmpty())
+		if (conflictColumns.isEmpty())
 			return "";
-		if (con.length()>0 && con.charAt(con.length() - 1) == ',')
-			con = con.substring(0, con.length() - 1);
-		if (update.length()>0 && update.charAt(update.length() - 1) == ',') {
-			update = update.substring(0, update.length() - 1);
-		}
 		
-		return String.format(str, con, update);
+		conflictColumns = trimTrailingComma(conflictColumns);
+		updateColumns = trimTrailingComma(updateColumns);
+
+		// if (conflictColumns.length() > 0 && conflictColumns.charAt(conflictColumns.length() - 1) == ',')
+		// 	conflictColumns = conflictColumns.substring(0, conflictColumns.length() - 1);
+		// if (updateColumns.length() > 0 && updateColumns.charAt(updateColumns.length() - 1) == ',') {
+		// 	updateColumns = updateColumns.substring(0, updateColumns.length() - 1);
+		// }
+
+		return String.format(str, conflictColumns, updateColumns);
 	}
 
 	/**
 	 * This will inject into the new Object values from the ResultSet.
 	 * 
-	 * @param dbModel     is the model object that will have the ResultSet values put
-	 *                into.
-	 * @param resultSet     is the ResultSet with the values
-	 * @param holders holds the references to the fields of the class being
-	 *                processed
+	 * @param dbModel   is the model object that will have the ResultSet values put
+	 *                  into.
+	 * @param resultSet is the ResultSet with the values
+	 * @param holders   holds the references to the fields of the class being
+	 *                  processed
 	 * @throws Exception
 	 */
-	public static void getValueFromResultSet(Object dbModel, ResultSet resultSet, List<Holder> holders) throws Exception {
+	public static void getValueFromResultSet(Object dbModel, ResultSet resultSet, List<Holder> holders)
+			throws Exception {
 		for (Holder hold : holders) {
 			try {
-				if(hold.getColumn().rsInstantiation()==ResultSetInstantiation.class) {
+				if (hold.getColumn().rsInstantiation() == ResultSetInstantiation.class) {
 					Object value = hold.getRsMethod().invoke(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
-				}else {
-					ResultSetInstantiation rsI=hold.getColumn().rsInstantiation().newInstance();
-					Object value=rsI.apply(resultSet, hold.getColumn().name());
+				} else {
+					ResultSetInstantiation rsI = hold.getColumn().rsInstantiation().newInstance();
+					Object value = rsI.apply(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				}
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -197,14 +205,16 @@ public class SqlHelper {
 		}
 
 		final Class<? super T> superClass = clazz.getSuperclass();
-		for (Field field : superClass.getDeclaredFields()) {
-			if (field.isAnnotationPresent(DbColumn.class)) {
-				DbColumn column = field.getAnnotation(DbColumn.class);
-				field.setAccessible(true);
-				holderList.add(new Holder(field, column));
+		if (superClass != null) {
+			for (Field field : superClass.getDeclaredFields()) {
+				if (field.isAnnotationPresent(DbColumn.class)) {
+					DbColumn column = field.getAnnotation(DbColumn.class);
+					field.setAccessible(true);
+					holderList.add(new Holder(field, column));
+				}
 			}
 		}
-		
+
 		generateRS(holderList);
 		setPlace(holderList);
 		return holderList;
@@ -218,7 +228,7 @@ public class SqlHelper {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This will assign a ResultMap to a holder based upon the
 	 * {@link Holder#getField()} type .
@@ -251,9 +261,8 @@ public class SqlHelper {
 	private static Map<String, Method> getResultSetMap() {
 		Map<String, Method> resultSetMap = new HashMap<>();
 		for (Method method : ResultSet.class.getDeclaredMethods()) {
-			if (method.getName().startsWith("get") 
-				&& method.getParameterCount() == 1
-				&& method.getParameterTypes()[0] == String.class) {
+			if (method.getName().startsWith("get") && method.getParameterCount() == 1
+					&& method.getParameterTypes()[0] == String.class) {
 				resultSetMap.put(method.getName().replace("get", "").toLowerCase(), method);
 			}
 		}
@@ -261,4 +270,15 @@ public class SqlHelper {
 
 	}
 
+	private static String trimTrailingComma(String str) {
+
+		if (str.isEmpty())
+			return "";
+
+		if (str.charAt(str.length() - 1) != ',') {
+			return "";
+		}
+
+		return str.substring(0, str.length() - 1);
+	}
 }
