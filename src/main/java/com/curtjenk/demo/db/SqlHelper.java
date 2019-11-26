@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -167,11 +168,15 @@ public class SqlHelper {
 			throws Exception {
 		for (Holder hold : holders) {
 			try {
-				if (hold.getColumn().rsInstantiation() == ResultSetInstantiation.class) {
-					Object value = hold.getRsMethod().invoke(resultSet, hold.getColumn().name());
+				if (hold.getColumn().resultType() == ColResultType.class) {
+					Method method = hold.getRsMethod();
+					if (method == null) {
+						System.out.println("no method " + hold.getColumn().name());
+					}
+					Object value = method.invoke(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				} else {
-					ResultSetInstantiation rsI = hold.getColumn().rsInstantiation().newInstance();
+					ColResultType rsI = hold.getColumn().resultType().newInstance();
 					Object value = rsI.apply(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				}
@@ -244,11 +249,15 @@ public class SqlHelper {
 			Class<?> clz = hold.getField().getType();
 			if (clz == Integer.class) {
 				type = "int";
-			}
+			} 
+			// else if (clz == LocalDateTime.class) {
+			// 	type = "timestamp";
+			// }
 			if (resultSetMap.containsKey(type)) {
 				Method m = resultSetMap.get(type);
 				hold.setRsMethod(m);
 			}
+			
 		}
 
 	}

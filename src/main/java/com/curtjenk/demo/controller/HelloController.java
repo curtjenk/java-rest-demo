@@ -26,15 +26,18 @@ public class HelloController {
     }
 
     @RequestMapping("/")
-    public List<UserDto> index() {
+    public List<OrganizationModel> index() {
         OrganizationModel org = new OrganizationModel();
         org.setAddress1("123 Mocking Bird Ln");
         org.setName("Demo Rest Api 3");
         org.setParentId(33L);
+    
         System.out.println(org.getUpsertSQL());
         postgresUtil.upsert(org);
 
-        return userService.getAllUsers();
+        List<OrganizationModel> orgs = postgresUtil.select("Select * from organizations", OrganizationModel.class);
+
+        return orgs;
 
     }
 

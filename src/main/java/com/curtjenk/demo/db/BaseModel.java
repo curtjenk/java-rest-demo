@@ -1,8 +1,11 @@
 package com.curtjenk.demo.db;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -13,9 +16,9 @@ import lombok.SneakyThrows;
 @Data
 public abstract class BaseModel<T extends BaseModel<T>> implements IBindPreparedStatement {
 
-    @Getter(value = AccessLevel.NONE)
-    @Setter(value = AccessLevel.NONE)
-    protected final T self;
+    // @Getter(value = AccessLevel.NONE)
+    // @Setter(value = AccessLevel.NONE)
+    // protected final T self;
 
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
@@ -27,20 +30,30 @@ public abstract class BaseModel<T extends BaseModel<T>> implements IBindPrepared
     
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
+    @JsonIgnore
     protected String upsertSQL;
 
     @DbColumn(name = "updated_user_id")
     private Long updatedUserId;
 
-    @DbColumn(name = "created_at", updateable = false, bindType = BindTypeTimeStamp.class)
+    @DbColumn(name = "created_at", updateable = false, bindType = BindTypeTimeStamp.class, resultType = ResultTypeLocalDateTime.class)
     private LocalDateTime createdAt;
 
-    @DbColumn(name = "updated_at", bindType = BindTypeTimeStamp.class)
+    @DbColumn(name = "updated_at", bindType = BindTypeTimeStamp.class, resultType = ResultTypeLocalDateTime.class)
     private LocalDateTime updatedAt;
 
-    protected BaseModel(final Class<T> selfClass) {
-        this.self = selfClass.cast(this);
+    protected BaseModel() {
         this.init();
+    }
+
+    protected BaseModel(ResultSet rs) {
+        this.init();
+        this.setResult(rs);
+    }
+
+    @SneakyThrows
+    public void setResult(ResultSet rs) {
+        SqlHelper.getValueFromResultSet(this, rs, holders);
     }
 
     public void init() {

@@ -49,5 +49,6 @@ public @interface DbColumn {
 	 * This is for when you need custom instantiation during the ResultSet
 	 * constructor.
 	 */
-	Class<? extends ResultSetInstantiation> rsInstantiation() default ResultSetInstantiation.class;
+	// Class<? extends ResultSetInstantiation> rsInstantiation() default ResultSetInstantiation.class;
+	Class<? extends ColResultType> resultType() default ColResultType.class;
 }
