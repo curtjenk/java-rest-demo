@@ -25,7 +25,7 @@ public class HelloController {
         this.postgresUtil = postgresUtil;
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/api/")
     public List<OrganizationModel> index() {
         OrganizationModel org = new OrganizationModel();
         org.setAddress1("123 Mocking Bird Ln");
