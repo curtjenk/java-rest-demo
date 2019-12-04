@@ -1,7 +1,6 @@
 package com.curtjenk.demo.db;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +17,6 @@ import org.jdbi.v3.core.statement.Query;
 import org.jdbi.v3.core.statement.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -31,9 +29,11 @@ public class PostgresUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(PostgresUtil.class);
 
-	@Autowired
 	PooledDataSource pooledDataSource;
 
+	public PostgresUtil(PooledDataSource pooledDataSource) {
+		this.pooledDataSource = pooledDataSource;
+	}
 	/**
 	 * SELECTS from postgres and maps the ResultSet to the bean.
 	 * 

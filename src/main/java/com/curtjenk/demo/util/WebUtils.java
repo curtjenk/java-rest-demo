@@ -10,8 +10,12 @@ public class WebUtils {
 
     private HttpServletRequest request;
 
-    @Autowired
-    public void setRequest(HttpServletRequest request) {
+    // @Autowired
+    // public void setRequest(HttpServletRequest request) {
+    //     this.request = request;
+    // }
+
+    public WebUtils(HttpServletRequest request) {
         this.request = request;
     }
 

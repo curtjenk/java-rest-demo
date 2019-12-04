@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.curtjenk.demo.db.PostgresUtil;
+import com.curtjenk.demo.dto.UserDto;
 import com.curtjenk.demo.model.UserModel;
 import com.curtjenk.demo.model.UserOrganizationRoleModel;
 import com.curtjenk.demo.model.UserTeamRoleModel;
@@ -84,5 +85,9 @@ public class UserRepository {
                 + "   JOIN teams t on t.id = tu.team_id "
                 + "  WHERE users.email = ?   ";
         return postgresUtil.select(sql, UserTeamRoleModel.class, email);
+    }
+
+    public UserDto save(UserDto newUser) {
+        return newUser;
     }
 }

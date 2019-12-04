@@ -23,26 +23,35 @@ This is a convenience class that allows customization to both WebSecurity and Ht
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+    
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    @Autowired
-    private UserDetailsService jwtUserDetailsService;
-    @Autowired
+    private UserDetailsService userDetailsService;
     private JwtRequestFilter jwtRequestFilter;
+    private PasswordEncoder passwordEncoder;
 
+    public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService userDetailsService,
+            JwtRequestFilter jwtRequestFilter,
+            PasswordEncoder passwordEncoder) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
+        this.passwordEncoder = passwordEncoder;
+    }
+    
+    
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
         // Use BCryptPasswordEncoder
         // NOTE: JwtUserDetailsService implements UserDetailsService interface !!!
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // @Bean
+    // public PasswordEncoder passwordEncoder() {
+    //     return new BCryptPasswordEncoder();
+    // }
 
     @Bean
     @Override
