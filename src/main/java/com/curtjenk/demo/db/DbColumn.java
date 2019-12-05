@@ -36,19 +36,16 @@ public @interface DbColumn {
 	boolean updateable() default true;
 
 	/**
-	 * This is for when you need custom instantiation during the @see
-	 * com.curtjenk.Model#bindPreparedStatement(PreparedStatement)
-	 * is called. Using an implementation of this class you can generate your own
+	 * This is for when you need custom processing to set bind variables
+	 * Using an implementation of this class you can generate your own
 	 * value for this column instead of what the existing value of the field.
 	 * 
 	 */
-	// Class<? extends PreparedInstantiation> psInstantiation() default PreparedInstantiation.class;
 	Class<? extends ColBindType> bindType() default ColBindType.class;
 
 	/**
-	 * This is for when you need custom instantiation during the ResultSet
-	 * constructor.
+	 * This is for when you need custom process for results.
+	 * Requires a constructor with a Resultset parameter
 	 */
-	// Class<? extends ResultSetInstantiation> rsInstantiation() default ResultSetInstantiation.class;
 	Class<? extends ColResultType> resultType() default ColResultType.class;
 }

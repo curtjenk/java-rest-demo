@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 import com.curtjenk.demo.dto.UserDto;
 import com.curtjenk.demo.dto.UserMapper;
+import com.curtjenk.demo.dto.UserOrganizationRoleDto;
 import com.curtjenk.demo.model.UserModel;
-import com.curtjenk.demo.model.UserOrganizationRoleModel;
 import com.curtjenk.demo.model.UserTeamRoleModel;
 import com.curtjenk.demo.repository.UserRepository;
 
@@ -42,13 +42,13 @@ public class UserService {
         try {
             CompletableFuture<Optional<UserModel>> f1 = CompletableFuture
                     .supplyAsync(() -> userRepository.findUserById(id), executorService);
-            CompletableFuture<List<UserOrganizationRoleModel>> f2 = CompletableFuture
+            CompletableFuture<List<UserOrganizationRoleDto>> f2 = CompletableFuture
                     .supplyAsync(() -> userRepository.findOrganizationRoles(id), executorService);
             CompletableFuture<List<UserTeamRoleModel>> f3 = CompletableFuture
                     .supplyAsync(() -> userRepository.findTeamRoles(id), executorService);
 
             Optional<UserModel> user = f1.get();
-            List<UserOrganizationRoleModel> organizationRoles = f2.get();
+            List<UserOrganizationRoleDto> organizationRoles = f2.get();
             List<UserTeamRoleModel> teamRoles = f3.get();
 
             userDto = UserDto.map(user.get());

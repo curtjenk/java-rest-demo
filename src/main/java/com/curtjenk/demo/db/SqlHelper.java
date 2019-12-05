@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,27 +56,18 @@ public class SqlHelper {
 		try {
 			for (int i = 0; i < holders.size(); i++) {
 
-				Holder ins = holders.get(i);
+				Holder holder = holders.get(i);
+				int place = holder.getPlace() + 1;
 
-				int place = ins.getPlace() + 1;
-				// if (ins.getColumn().psInstantiation() != PreparedInstantiation.class) {
-				// 	Class<? extends PreparedInstantiation> clazz = ins.getColumn().psInstantiation();
-				// 	PreparedInstantiation inst = clazz.newInstance();
-				// 	inst.apply(ps, place,ins.getField().get(obj));
-				// } else {
-				// 	ps.setObject(place, ins.getField().get(obj));
-				// }
-
-				if (ins.getColumn().bindType() != ColBindType.class) {
-					Class<? extends ColBindType> clazz = ins.getColumn().bindType();
-					ColBindType inst = clazz.newInstance();
-					inst.apply(ps, place, ins.getField().get(obj));
+				if (holder.getColumn().bindType() != ColBindType.class) {
+					Class<? extends ColBindType> clazz = holder.getColumn().bindType();
+					ColBindType bindType = clazz.newInstance();
+					bindType.apply(ps, place, holder.getField().get(obj));
 				} else {
-					ps.setObject(place, ins.getField().get(obj));
+					ps.setObject(place, holder.getField().get(obj));
 				}
-
 			}
-			ps.addBatch();
+			// ps.addBatch();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -107,12 +97,6 @@ public class SqlHelper {
 		}
 		statement = trimTrailingComma(statement);
 		quesMarks = trimTrailingComma(quesMarks);
-
-		// if (statement.charAt(statement.length() - 1) == ',')
-		// 	statement = statement.substring(0, statement.length() - 1);
-
-		// if (quesMarks.charAt(quesMarks.length() - 1) == ',')
-		// 	quesMarks = quesMarks.substring(0, quesMarks.length() - 1);
 
 		return String.format(str, statement, quesMarks) + generateOnConflict(holders);
 	}
@@ -144,12 +128,6 @@ public class SqlHelper {
 		
 		conflictColumns = trimTrailingComma(conflictColumns);
 		updateColumns = trimTrailingComma(updateColumns);
-
-		// if (conflictColumns.length() > 0 && conflictColumns.charAt(conflictColumns.length() - 1) == ',')
-		// 	conflictColumns = conflictColumns.substring(0, conflictColumns.length() - 1);
-		// if (updateColumns.length() > 0 && updateColumns.charAt(updateColumns.length() - 1) == ',') {
-		// 	updateColumns = updateColumns.substring(0, updateColumns.length() - 1);
-		// }
 
 		return String.format(str, conflictColumns, updateColumns);
 	}

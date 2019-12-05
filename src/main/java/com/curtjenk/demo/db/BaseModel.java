@@ -16,9 +16,9 @@ import lombok.SneakyThrows;
 @Data
 public abstract class BaseModel<T extends BaseModel<T>> implements IBindPreparedStatement {
 
-    // @Getter(value = AccessLevel.NONE)
-    // @Setter(value = AccessLevel.NONE)
-    // protected final T self;
+    @Getter(value = AccessLevel.NONE)
+    @Setter(value = AccessLevel.NONE)
+    protected final T self;
 
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
@@ -42,11 +42,13 @@ public abstract class BaseModel<T extends BaseModel<T>> implements IBindPrepared
     @DbColumn(name = "updated_at", bindType = BindTypeTimeStamp.class, resultType = ResultTypeLocalDateTime.class)
     private LocalDateTime updatedAt;
 
-    protected BaseModel() {
+    protected BaseModel(final Class<T> selfClass) {
+        this.self = selfClass.cast(this);
         this.init();
     }
 
-    protected BaseModel(ResultSet rs) {
+    protected BaseModel(final Class<T> selfClass, ResultSet rs) {
+        this.self = selfClass.cast(this);
         this.init();
         this.setResult(rs);
     }

@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.curtjenk.demo.db.PostgresUtil;
 import com.curtjenk.demo.dto.UserDto;
 import com.curtjenk.demo.model.UserModel;
-import com.curtjenk.demo.model.UserOrganizationRoleModel;
+import com.curtjenk.demo.dto.UserOrganizationRoleDto;
 import com.curtjenk.demo.model.UserTeamRoleModel;
 
 import org.springframework.stereotype.Repository;
@@ -46,25 +46,25 @@ public class UserRepository {
 
     }
 
-    public List<UserOrganizationRoleModel> findOrganizationRoles(String email) {
+    public List<UserOrganizationRoleDto> findOrganizationRoles(String email) {
         final String sql = "SELECT ou.*, o.name as organization_name, r.name as role_name "
                 + "   FROM users                                                 "
                 + "   JOIN organization_user ou on ou.user_id = users.id        "
                 + "   JOIN roles r on r.id = ou.role_id " 
                 + "   JOIN organizations o on o.id = ou.organization_id "
                 + "  WHERE users.email = ? ";
-        return postgresUtil.select(sql, UserOrganizationRoleModel.class, email);
+        return postgresUtil.select(sql, UserOrganizationRoleDto.class, email);
     }
     
 
-    public List<UserOrganizationRoleModel> findOrganizationRoles(Long userId) {
+    public List<UserOrganizationRoleDto> findOrganizationRoles(Long userId) {
         final String sql = "SELECT ou.*, o.name as organization_name, r.name as role_name "
                 + "   FROM users "
                 + "   JOIN organization_user ou on ou.user_id = users.id        "
                 + "   JOIN roles r on r.id = ou.role_id        "
                 + "   JOIN organizations o on o.id = ou.organization_id "
                 + "  WHERE users.id = ?                                          ";
-        return postgresUtil.select(sql, UserOrganizationRoleModel.class, userId);
+        return postgresUtil.select(sql, UserOrganizationRoleDto.class, userId);
     }
     
     public List<UserTeamRoleModel> findTeamRoles(Long userId) {

@@ -3,7 +3,6 @@ package com.curtjenk.demo.dto;
 import java.util.List;
 
 import com.curtjenk.demo.model.UserModel;
-import com.curtjenk.demo.model.UserOrganizationRoleModel;
 import com.curtjenk.demo.model.UserTeamRoleModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,7 +30,7 @@ public class UserDto {
     @JsonIgnore
     @ToString.Exclude
     private String password;
-    private List<UserOrganizationRoleModel> organizationRoles;
+    private List<UserOrganizationRoleDto> organizationRoles;
     private List<UserTeamRoleModel> teamRoles;
 
     public static UserDto map(UserModel user) {

@@ -2,7 +2,9 @@ package com.curtjenk.demo.db;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+/**
+ * Set a Timestamp bind variable value to current date time
+ */
 public class BindTypeTimeStamp implements ColBindType {
 
 	@Override

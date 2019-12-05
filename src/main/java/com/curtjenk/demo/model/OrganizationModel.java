@@ -41,10 +41,10 @@ public class OrganizationModel extends BaseModel<OrganizationModel> {
     private String phone;
 
     public OrganizationModel() {
-        super();
+        super(OrganizationModel.class);
     }
 
     public OrganizationModel(ResultSet rs) {
-        super(rs);
+        super(OrganizationModel.class, rs);
     }
 }

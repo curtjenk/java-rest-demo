@@ -2,7 +2,7 @@ package com.curtjenk.demo.db;
 
 import java.sql.Connection;
 
-import javax.annotation.PostConstruct;
+// import javax.annotation.PostConstruct;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.curtjenk.demo.exception.GeneralException;
