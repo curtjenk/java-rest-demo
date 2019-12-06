@@ -1,13 +1,13 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.annotations;
 
 import java.sql.PreparedStatement;
 
 /**
- * This Interface is used in the {@link DbColumn#psInstantiation()} the apply
+ * This Interface is used in the {@link DbColumn#bindType()} the apply
  * method will set the value in the prepared statement at a given point
  * 
  */
-public interface PreparedInstantiation {
+public interface ColBindType {
 
 	void apply(PreparedStatement ps, int place, Object currentValue) throws Exception;
 }

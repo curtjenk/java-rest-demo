@@ -1,10 +1,16 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.curtjenk.demo.db.annotations.BindTypeTimeStamp;
+import com.curtjenk.demo.db.annotations.DbColumn;
+import com.curtjenk.demo.db.annotations.ResultTypeLocalDateTime;
+import com.curtjenk.demo.db.util.Holder;
+import com.curtjenk.demo.db.util.IBindPreparedStatement;
+import com.curtjenk.demo.db.util.SqlHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AccessLevel;

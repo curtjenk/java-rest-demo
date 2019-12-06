@@ -1,4 +1,4 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.util;
 
 import java.lang.reflect.Constructor;
 import java.sql.Connection;

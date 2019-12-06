@@ -1,6 +1,8 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.util;
 
 import java.sql.Connection;
+
+import javax.annotation.PostConstruct;
 
 // import javax.annotation.PostConstruct;
 
@@ -10,8 +12,6 @@ import com.curtjenk.demo.exception.GeneralException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -39,8 +39,8 @@ public class PooledDataSource {
     private ComboPooledDataSource datasource;
 
     
-    // @PostConstruct
-    @EventListener(ApplicationReadyEvent.class)
+    @PostConstruct
+    // @EventListener(ApplicationReadyEvent.class)
     public void init() {
 
         try {

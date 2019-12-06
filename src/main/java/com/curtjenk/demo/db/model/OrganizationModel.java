@@ -1,10 +1,9 @@
-package com.curtjenk.demo.model;
+package com.curtjenk.demo.db.model;
 
 import java.sql.ResultSet;
 
-import com.curtjenk.demo.db.BaseModel;
-import com.curtjenk.demo.db.DbColumn;
-import com.curtjenk.demo.db.DbTable;
+import com.curtjenk.demo.db.annotations.DbColumn;
+import com.curtjenk.demo.db.annotations.DbTable;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

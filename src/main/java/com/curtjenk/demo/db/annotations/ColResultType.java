@@ -1,4 +1,4 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.annotations;
 
 import java.sql.ResultSet;
 

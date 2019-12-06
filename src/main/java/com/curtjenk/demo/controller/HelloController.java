@@ -2,8 +2,8 @@ package com.curtjenk.demo.controller;
 
 import java.util.List;
 
-import com.curtjenk.demo.db.PostgresUtil;
-import com.curtjenk.demo.model.OrganizationModel;
+import com.curtjenk.demo.db.model.OrganizationModel;
+import com.curtjenk.demo.db.util.PostgresUtil;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

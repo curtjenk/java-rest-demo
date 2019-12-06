@@ -8,12 +8,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import com.curtjenk.demo.db.model.UserModel;
+import com.curtjenk.demo.db.repository.UserRepository;
 import com.curtjenk.demo.dto.UserDto;
-import com.curtjenk.demo.dto.UserMapper;
 import com.curtjenk.demo.dto.UserOrganizationRoleDto;
-import com.curtjenk.demo.model.UserModel;
-import com.curtjenk.demo.model.UserTeamRoleModel;
-import com.curtjenk.demo.repository.UserRepository;
+import com.curtjenk.demo.dto.UserTeamRoleDto;
+import com.curtjenk.demo.dto.mappers.UserMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,17 +44,17 @@ public class UserService {
                     .supplyAsync(() -> userRepository.findUserById(id), executorService);
             CompletableFuture<List<UserOrganizationRoleDto>> f2 = CompletableFuture
                     .supplyAsync(() -> userRepository.findOrganizationRoles(id), executorService);
-            CompletableFuture<List<UserTeamRoleModel>> f3 = CompletableFuture
+            CompletableFuture<List<UserTeamRoleDto>> f3 = CompletableFuture
                     .supplyAsync(() -> userRepository.findTeamRoles(id), executorService);
 
             Optional<UserModel> user = f1.get();
             List<UserOrganizationRoleDto> organizationRoles = f2.get();
-            List<UserTeamRoleModel> teamRoles = f3.get();
+            List<UserTeamRoleDto> teamRoles = f3.get();
 
             userDto = UserDto.map(user.get());
             // userDto = UserMapper.toUserDto(user.get());
-            userDto.setOrganizationRoles(organizationRoles);
-            userDto.setTeamRoles(teamRoles);
+            userDto.organizationRoles(organizationRoles);
+            userDto.teamRoles(teamRoles);
             logger.info(userDto.toString());
         } catch (ExecutionException ee) {
             logger.error("msg", ee);

@@ -1,4 +1,4 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.annotations;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

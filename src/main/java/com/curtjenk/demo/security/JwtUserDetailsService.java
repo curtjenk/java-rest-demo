@@ -3,9 +3,9 @@ package com.curtjenk.demo.security;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.curtjenk.demo.db.model.UserModel;
+import com.curtjenk.demo.db.repository.UserRepository;
 import com.curtjenk.demo.dto.UserDto;
-import com.curtjenk.demo.model.UserModel;
-import com.curtjenk.demo.repository.UserRepository;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +36,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     public UserDto save(final UserDto user) {
         final UserDto newUser = new UserDto();
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.password(passwordEncoder.encode(user.password()));
         return userRepository.save(newUser);
     }
 }

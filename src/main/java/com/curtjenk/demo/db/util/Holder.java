@@ -1,7 +1,9 @@
-package com.curtjenk.demo.db;
+package com.curtjenk.demo.db.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import com.curtjenk.demo.db.annotations.DbColumn;
 
 public class Holder {
 		private final Field field;

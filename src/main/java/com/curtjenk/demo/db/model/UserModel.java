@@ -1,10 +1,10 @@
-package com.curtjenk.demo.model;
+package com.curtjenk.demo.db.model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.curtjenk.demo.db.IBindPreparedStatement;
+import com.curtjenk.demo.db.util.IBindPreparedStatement;
 
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -31,7 +31,7 @@ public class UserModel implements IBindPreparedStatement {
     @SneakyThrows
     @Override
     public void bindPreparedStatement(PreparedStatement ps) {
-        this.bindPreparedStatement(ps, true);
+        this.bindPreparedStatement(ps, false);
     }
 
     @Override
