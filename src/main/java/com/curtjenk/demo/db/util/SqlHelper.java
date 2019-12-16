@@ -66,7 +66,7 @@ public class SqlHelper {
 
 				if (holder.getColumn().bindType() != ColBindType.class) {
 					Class<? extends ColBindType> clazz = holder.getColumn().bindType();
-					ColBindType bindType = clazz.newInstance();
+					ColBindType bindType = clazz.getDeclaredConstructor().newInstance();
 					bindType.apply(ps, place, holder.getField().get(obj));
 				} else {
 					ps.setObject(place, holder.getField().get(obj));
@@ -91,7 +91,7 @@ public class SqlHelper {
 		if (holders.isEmpty()) {
 			return "";
 		}
-		
+
 		String str = "INSERT INTO %%s(%s) VALUES(%s) ";
 		holders.sort((c1, c2) -> c1.getPlace() - c2.getPlace());
 		String statement = "";
@@ -130,7 +130,7 @@ public class SqlHelper {
 		}
 		if (conflictColumns.isEmpty())
 			return "";
-		
+
 		conflictColumns = trimTrailingComma(conflictColumns);
 		updateColumns = trimTrailingComma(updateColumns);
 
@@ -159,7 +159,7 @@ public class SqlHelper {
 					Object value = method.invoke(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				} else {
-					ColResultType rsI = hold.getColumn().resultType().newInstance();
+					ColResultType rsI = hold.getColumn().resultType().getDeclaredConstructor().newInstance();
 					Object value = rsI.apply(resultSet, hold.getColumn().name());
 					hold.getField().set(dbModel, value);
 				}
@@ -232,15 +232,15 @@ public class SqlHelper {
 			Class<?> clz = hold.getField().getType();
 			if (clz == Integer.class) {
 				type = "int";
-			} 
+			}
 			// else if (clz == LocalDateTime.class) {
-			// 	type = "timestamp";
+			// type = "timestamp";
 			// }
 			if (resultSetMap.containsKey(type)) {
 				Method m = resultSetMap.get(type);
 				hold.setRsMethod(m);
 			}
-			
+
 		}
 
 	}
